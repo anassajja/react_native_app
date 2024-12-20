@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { View, ToastAndroid, Button, StatusBar, Text, Image, TextInput, TouchableOpacity, StyleSheet, Animated, ImageBackground} from 'react-native';
+import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import Settings from './components/Settings';
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,13 +21,21 @@ const WelcomeScreen = ({ navigation }) => {
     }).start();
   }, [fadeAnim]);
 
+  const onSwipeLeft = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <Animated.View style={[styles.container1, { opacity: fadeAnim }]}>
-      <Text style={styles.title}>Welcome</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.buttonText}>Go to Login</Text>
-      </TouchableOpacity>
-    </Animated.View>
+    <GestureRecognizer onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{flex: 1}}> 
+      <ImageBackground source={require('./assets/background.png')} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Animated.View style={[styles.container1, { opacity: fadeAnim }]}>
+          <Text style={styles.title}>Welcome</Text>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.buttonText}>Go to Login</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </ImageBackground>
+    </GestureRecognizer>
   );
 };
 
@@ -72,33 +80,44 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const onSwipeRight = () => {
+    navigation.navigate('Welcome');
+  };
+
+  const onSwipeLeft = () => {
+    navigation.navigate('Register');
+  };
+
   return (
-    <View style={styles.container2}>
-      <Image source={require('./assets/profile.jpg')} style={styles.profile} />
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.text} onPress={() => navigation.navigate('Register')}>Don't Have an Account?</Text>
-    </View>
+    <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{flex: 1}}>
+      <View style={styles.container2}>
+        <Image source={require('./assets/profile.jpg')} style={styles.profile} />
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <Text style={styles.text} onPress={() => navigation.navigate('ResetPassword')}>Forgot Password?</Text>
+        <Text style={styles.text} onPress={() => navigation.navigate('Register')}>Don't Have an Account?</Text>
+      </View>
+    </GestureRecognizer>
   );
 };
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [password_confirmation, setPassword_confirmation] = useState('');
@@ -147,42 +166,162 @@ const RegisterScreen = () => {
     }
   };
 
+  const onSwipeRight = () => {
+    navigation.navigate('Login');
+  };
+
+  const onSwipeLeft = () => {
+    navigation.navigate('Settings');
+  }
+
   return (
-    <View style={styles.container2}>
-      <Text style={styles.title}>Register</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        secureTextEntry={true}
-        value={password_confirmation}
-        onChangeText={setPassword_confirmation}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+    <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{flex: 1}}>
+      <View style={styles.container2}>
+        <Text style={styles.title}>Register</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          secureTextEntry={true}
+          value={password_confirmation}
+          onChangeText={setPassword_confirmation}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+      </View>
+    </GestureRecognizer>
   );
 };
+
+const ResetPasswordScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const resetFields = () => {
+    setEmail('');
+    setError('');
+  }
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError('Email is required');
+      return;
+    } else {
+      setError('');
+      try {
+        const response = await axios.post('',
+          {
+            email,
+          }
+        );
+        Toast.show({
+          type: 'success',
+          text1: 'Reset Password',
+          text2: 'Password reset instructions have been sent to your email',
+        });
+        console.log(response.data);
+        resetFields();
+      }
+      catch (error) {
+        setError('Invalid email');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Invalid email',
+        });
+        resetFields();
+      }
+    }
+  };
+
+  const onSwipeRight = () => {
+    navigation.navigate('Login');
+  };
+
+  return (
+    <GestureRecognizer onSwipeRight={onSwipeRight} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{flex: 1}}>
+      <View style={styles.container2}>
+        <Text style={styles.title}>Reset Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
+          <Text style={styles.buttonText}>Reset Password</Text>
+        </TouchableOpacity>
+      </View>
+    </GestureRecognizer>
+  );
+};
+
+const SettingsScreen = ({navigation}) => {
+  
+  const onSwipeRight = () => {
+    navigation.navigate('Register');
+  };
+
+  const showToast = () => {
+    ToastAndroid.show('A pikachu appeared nearby !', ToastAndroid.SHORT);
+  };
+
+  const showToastWithGravity = () => {
+    ToastAndroid.showWithGravity(
+      'All Your Base Are Belong To Us',
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER,
+    );
+  };
+
+  const showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'A wild toast appeared!',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+  };
+
+  return (
+    <GestureRecognizer onSwipeRight={onSwipeRight} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{flex: 1}}>
+      <SafeAreaView style={styles.container3}>
+        <Button title="Toggle Toast" onPress={() => showToast()} />
+        <Button
+          title="Toggle Toast With Gravity"
+          onPress={() => showToastWithGravity()}
+        />
+        <Button
+          title="Toggle Toast With Gravity & Offset"
+          onPress={() => showToastWithGravityAndOffset()}
+        />
+      </SafeAreaView>
+    </GestureRecognizer>
+  );
+};
+
 
 const App = () => {
   return (
@@ -202,6 +341,8 @@ const App = () => {
                 iconName = 'person-add-outline';
               } else if (route.name === 'Settings') {
                 iconName = 'settings-outline';
+              } else if (route.name === 'ResetPassword') {
+                iconName = 'key-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -223,12 +364,22 @@ const App = () => {
               size: 24, // Customize the size of the icons
               color : 'red',
             },
+            headerShown: false, // Hide the header of the screen
+/*             headerStyle: {
+              backgroundColor: 'transparent',
+            },
+            headerTintColor: '#007BFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            }, */
+              
           })}
         >
           <Tab.Screen name="Welcome" component={WelcomeScreen} />
           <Tab.Screen name="Login" component={LoginScreen} />
           <Tab.Screen name="Register" component={RegisterScreen} />
-          <Tab.Screen name="Settings" component={Settings} />
+          <Tab.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>
       </NavigationContainer>
       <Toast />
@@ -242,7 +393,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: 'whitesmoke',
   },
   container2: {
     flex: 1,
@@ -250,6 +400,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     backgroundColor: 'whitesmoke',
+  },
+  container3: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: StatusBar.currentHeight,
+    backgroundColor: 'whitesmoke',
+    padding: 8,
   },
   title: {
     fontSize: 28,
