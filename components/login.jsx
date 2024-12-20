@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <Controller
-        control={control}
+        control={control} 
         rules={{ required: 'Username is required' }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput

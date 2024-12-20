@@ -4,6 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import Settings from './components/Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,17 +32,43 @@ const WelcomeScreen = ({ navigation }) => {
 };
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    if (!username || !password) {
-      setError('Username and password are required');
+  const resetFields = () => {
+    setName('');
+    setPassword('');
+    setError('');
+  };
+
+  const handleLogin = async () => {
+    if (!name || !password) {
+      setError('All fields are required');
       return;
     } else {
       setError('');
-      alert(`Username: ${username}, Password: ${password}`);
+      try {
+        const response = await axios.post('http://192.168.11.106:8000/api/login', {
+          name,
+          password,
+        });
+        Toast.show({
+          type: 'success',
+          text1: 'Welcome',
+          text2: `Welcome: ${response.data.user.name}`,
+        });
+        console.log(response.data);
+        resetFields();
+      } catch (error) {
+        setError('Invalid credentials');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Invalid credentials',
+        });
+        resetFields();
+      }
     }
   };
 
@@ -50,8 +79,8 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        value={name}
+        onChangeText={setName}
       />
       <TextInput
         style={styles.input}
@@ -70,19 +99,51 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const RegisterScreen = () => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password_confirmation, setPassword_confirmation] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
-  const handleRegister = () => {
-    if (!username || !password || !confirmPassword || !email) {
+  const resetFields = () => {
+    setName('');
+    setPassword('');
+    setPassword_confirmation('');
+    setEmail('');
+  };
+
+  const handleRegister = async () => {
+    if (!name || !password || !password_confirmation || !email) {
       setError('All fields are required');
+      return;
+    } else if (password !== password_confirmation) {
+      setError('Passwords do not match');
       return;
     } else {
       setError('');
-      alert(`Username: ${username}, Password: ${password}`);
+      try {
+        const response = await axios.post('http://192.168.11.106:8000/api/register', {
+          name,
+          password,
+          password_confirmation,
+          email,
+        });
+        Toast.show({
+          type: 'success',
+          text1: 'Registration Successful',
+          text2: 'You have successfully registered!',
+        });
+        console.log(response.data);
+        resetFields();
+      } catch (error) {
+        setError('Invalid credentials');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Invalid credentials',
+        });
+        resetFields();
+      }
     }
   };
 
@@ -92,8 +153,8 @@ const RegisterScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        value={name}
+        onChangeText={setName}
       />
       <TextInput
         style={styles.input}
@@ -106,8 +167,8 @@ const RegisterScreen = () => {
         style={styles.input}
         placeholder="Confirm Password"
         secureTextEntry={true}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        value={password_confirmation}
+        onChangeText={setPassword_confirmation}
       />
       <TextInput
         style={styles.input}
@@ -139,21 +200,38 @@ const App = () => {
                 iconName = 'log-in-outline';
               } else if (route.name === 'Register') {
                 iconName = 'person-add-outline';
+              } else if (route.name === 'Settings') {
+                iconName = 'settings-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
             },
+            tabBarActiveTintColor: '#007BFF', // Customize the color of the active tab icon
+            tabBarInactiveTintColor: 'gray', // Customize the color of the inactive tab icon
+            tabBarStyle: {
+              backgroundColor: '#00ffff',
+              borderTopWidth: 0,
+              elevation: 5,
+              height: 60,
+              paddingBottom: 10,
+            },
+            tabBarLabelStyle: {
+              fontSize: 12,
+              fontWeight: 'bold',
+            },
+            tabBarIconStyle: {
+              size: 24, // Customize the size of the icons
+              color : 'red',
+            },
           })}
-          tabBarOptions={{
-            activeTintColor: '#007BFF',
-            inactiveTintColor: 'gray',
-          }}
         >
           <Tab.Screen name="Welcome" component={WelcomeScreen} />
           <Tab.Screen name="Login" component={LoginScreen} />
           <Tab.Screen name="Register" component={RegisterScreen} />
+          <Tab.Screen name="Settings" component={Settings} />
         </Tab.Navigator>
       </NavigationContainer>
+      <Toast />
     </SafeAreaProvider>
   );
 };
@@ -164,14 +242,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#00ffff',
+    backgroundColor: 'whitesmoke',
   },
   container2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#00ffff',
+    backgroundColor: 'whitesmoke',
   },
   title: {
     fontSize: 28,
