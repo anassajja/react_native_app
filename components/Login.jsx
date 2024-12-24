@@ -88,6 +88,7 @@ const Login = () => {
                         <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
                     </View>
                 </View>
+                <View style={{ marginTop: 10 }}>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
@@ -99,12 +100,13 @@ const Login = () => {
                     />
                     <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
                 </View>
+                </View>
                 {error ? <Text style={styles.error}>{error}</Text> : null}
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
-                <Text style={{ color: 'white', position: 'absolute', bottom: 275 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text>
-                <Text style={{ color: 'white', position: 'absolute', bottom: 250 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 280 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
+                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 260 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
                 <Image
                     source={require('../assets/attendance-management-system.png')}
                     style={styles.image}
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        bottom: 300,
+        bottom: 310,
         width: '100%',
 
     },
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 350,
         height: 350,
-        bottom: -80,
+        bottom: -90,
     },
 });
 

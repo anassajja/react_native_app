@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
@@ -65,7 +65,8 @@ const Register = () => {
     } */
   
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
         <Text style={styles.title}>Register</Text>
         <TextInput
           style={styles.input}
@@ -98,7 +99,8 @@ const Register = () => {
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <Text style={styles.text} onPress={() => navigation.navigate('Login')}>Already Have an Account?</Text>
-      </View>
+        </View>
+      </SafeAreaView>
     );
 };
 

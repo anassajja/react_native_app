@@ -51,6 +51,6 @@ const RootStack = createNativeStackNavigator({ // Create a new stack navigator c
 
 const Navigation = createStaticNavigation(RootStack); // Create a static navigation container with the RootStack navigator
 
-export default function App() {
-  return <Navigation />;
+export default function App() { // Export the App component as the default export
+  return <Navigation />; // Return the Navigation component from the App component
 }

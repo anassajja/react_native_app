@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { useNavigation } from '@react-navigation/native';
 import NavBar from './NavBar';
+import { SafeAreaView } from 'react-native';
 
 const Home = () => {
     const fadeAnim = new Animated.Value(0); // Initial value for opacity: 0 (transparent)
@@ -29,6 +30,7 @@ const Home = () => {
                 config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} 
                 style={{ flex: 1 }}
             >
+                <SafeAreaView style={{ flex: 1 }}>
                 <LinearGradient
                     colors={['#FF0000', '#FF6347', '#FFA07A', '#FFF']} // Adjust gradient colors to your needs
                     style={styles.gradient}
@@ -58,6 +60,7 @@ const Home = () => {
                     </Animated.View>
                     <NavBar />
                 </LinearGradient>
+                </SafeAreaView>
             </GestureRecognizer>
         </>
     );
@@ -72,7 +75,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     image: {
         width: 400, // Adjust to your needs
         height: 400, // Adjust to your needs
-        marginBottom: 100,
+        marginBottom: 90,
         marginHorizontal: 'auto'
     },
     title: {
@@ -92,14 +94,12 @@ const styles = StyleSheet.create({
         fontFamily: 'Oswald-Bold',
     },
     button: {
-        position: 'absolute',
         backgroundColor: '#ff0000',
         padding: 10,
         borderRadius: 10,
         width: '100%',
+        marginHorizontal: 'auto',
         bottom: 80,
-        marginHorizontal: 20,
-
     },
     buttonText: {
         fontWeight: 'bold',
