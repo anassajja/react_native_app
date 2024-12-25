@@ -1,10 +1,21 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Switch } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Switch, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { useNavigation } from '@react-navigation/native';
 
 const SettingsScreen = () => { // Settings screen component with navigation prop
+
+    const [isEnabled, setIsEnabled] = useState(false); // State for the toggle switch
+    const toggleSwitch = () => {
+      setIsEnabled((previousState) => {
+          const newState = !previousState;
+          if (newState) {
+              Alert.alert('Notification', 'Notifications are enabled !');
+          }
+          return newState;
+      });
+    };
 
     const navigation = useNavigation(); // Get the navigation prop
     
@@ -56,10 +67,16 @@ const SettingsScreen = () => { // Settings screen component with navigation prop
 
   const renderItem = ({ item }) => ( // Render each item in the list view
     <View style={styles.itemContainer}>
-        <Icon name={item.icon} size={24} color="#007BFF" style={styles.icon} />
+        <Icon name={item.icon} size={24} color="#FF6464" style={styles.icon} />
         <Text style={styles.title}>{item.title}</Text>
-        {item.toggle ? (
-            <Switch value={true} onValueChange={() => alert('Toggle Changed')} />
+        {item.toggle ? ( // If the item has a toggle switch, render the switch
+                      <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={isEnabled ? "#ff6464" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                      />
         ) : (
             <TouchableOpacity onPress={item.onPress} style={styles.arrowButton}>
             <Icon name="chevron-forward-outline" size={20} color="#aaa" />

@@ -63,7 +63,7 @@ const Login = () => {
     return (
         <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
             <LinearGradient colors={['#FFE5E1', '#FFB3A7', 'red']} style={styles.container}>
-                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <ScrollView contentContainerStyle={styles.scrollContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     <Text style={styles.title}>Select Your Role</Text>
                     <RadioButtonGroup
                         containerStyle={styles.radioContainer}
@@ -123,13 +123,13 @@ const Login = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, // Take the whole screen height 
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
     },
     scrollContainer: {
-        flexGrow: 1, // Take the whole screen height
+        flexGrow: 1, // Take the whole screen height  
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     image: {
         width: 350,
         height: 350,
-        bottom: -140,
+        bottom: -120,
     },
 });
 
