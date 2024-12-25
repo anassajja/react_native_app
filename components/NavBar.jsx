@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',// Add this line to align the items in the center
         alignItems: 'center',
         flexDirection: 'row',
-        position: 'absolute',
         bottom: 0,
     },
     navItem: {

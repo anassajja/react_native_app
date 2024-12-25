@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
+import attendanceImage from '../assets/attendance-management-system.png';
 
 const Login = () => {
     const [name, setName] = useState('');
@@ -108,7 +109,7 @@ const Login = () => {
                 <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 280 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
                 <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 260 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
                 <Image
-                    source={require('../assets/attendance-management-system.png')}
+                    source={attendanceImage}
                     style={styles.image}
                     resizeMode="contain"
                 />

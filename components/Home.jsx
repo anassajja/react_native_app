@@ -5,6 +5,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import { useNavigation } from '@react-navigation/native';
 import NavBar from './NavBar';
 import { SafeAreaView } from 'react-native';
+import attendanceImage from '../assets/attendance-management-system.png';
 
 const Home = () => {
     const fadeAnim = new Animated.Value(0); // Initial value for opacity: 0 (transparent)
@@ -49,7 +50,7 @@ const Home = () => {
                         </View>
                         <View style={{marginTop: 250}}>
                             <Image 
-                                source={require('../assets/attendance-management-system.png')} // Replace with your PNG image path
+                                source={attendanceImage}
                                 style={styles.image} 
                                 resizeMode="contain" 
                                 />
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     image: {
         width: 400, // Adjust to your needs
         height: 400, // Adjust to your needs
-        marginBottom: 90,
+        marginBottom: 0,
         marginHorizontal: 'auto'
     },
     title: {
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: '100%',
         marginHorizontal: 'auto',
-        bottom: 80,
+        bottom: 0,
     },
     buttonText: {
         fontWeight: 'bold',
