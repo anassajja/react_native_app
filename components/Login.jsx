@@ -57,12 +57,12 @@ const Login = () => {
     };
 
     const onSwipeLeft = () => {
-        navigation.navigate('Profile');
+        navigation.navigate('AdminDashboard');
     };
 
     return (
         <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
-            <LinearGradient colors={['#FFE5E1', '#FFB3A7', 'red']} style={styles.container}>
+            <LinearGradient colors={['#FFE5E1', '#FFB3A7', '#ff6464']} style={styles.container}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     <Text style={styles.title}>Select Your Role</Text>
                     <RadioButtonGroup
@@ -105,7 +105,7 @@ const Login = () => {
                     </View>
                     {error ? <Text style={styles.error}>{error}</Text> : null}
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.buttonText}>Sign In</Text>
+                        <Text style={styles.buttonText} onPress={() => navigation.navigate('AdminDashboard')}>Sign In</Text>
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontWeight: 'bold', bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
                     <Text style={{ color: 'white', fontWeight: 'bold', bottom: -130 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     button: {
-        backgroundColor: 'red',
+        backgroundColor: '#ff6464',
         borderRadius: 15,
         paddingVertical: 15,
         paddingHorizontal: 40,
@@ -203,7 +203,8 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        marginBottom: 10,
+        marginBottom: 15,
+        top: 90,
     },
     image: {
         width: 350,

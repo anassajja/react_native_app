@@ -7,6 +7,7 @@ import RegisterScreen from './components/Register';
 import ResetPasswordScreen from './components/Reset_password';
 import ProfileScreen from './components/Profile';
 import SettingsScreen from './components/Settings';
+import AdminDashboard from './components/Dashboard';
 
 const RootStack = createNativeStackNavigator({ // Create a new stack navigator called RootStack
   screens: {
@@ -42,6 +43,12 @@ const RootStack = createNativeStackNavigator({ // Create a new stack navigator c
     },
     Settings: {
       screen: SettingsScreen,
+      options: {
+        headerShown: false,
+      },
+    },
+    AdminDashboard: {
+      screen: AdminDashboard,
       options: {
         headerShown: false,
       },

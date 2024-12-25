@@ -61,7 +61,7 @@ const ResetPassword = () => {
         <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
           <Text style={styles.buttonText}>Reset Password</Text>
         </TouchableOpacity>
-        <Text style={styles.text}>Remember your password? <Text style={{ color: '#007BFF' }} onPress={() => navigation.navigate('Login')}>Login</Text></Text>
+        <Text style={styles.text}>Remember your password? <Text style={{ color: '#ff6464' }} onPress={() => navigation.navigate('Login')}>Login</Text></Text>
       </View>
     );
 };
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#ff6464',
         paddingVertical: 12,
         paddingHorizontal: 32,
         borderRadius: 8,

@@ -3,17 +3,18 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Switch, Alert } fro
 import Icon from 'react-native-vector-icons/Ionicons';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { useNavigation } from '@react-navigation/native';
+import NavBar from './NavBar';
 
 const SettingsScreen = () => { // Settings screen component with navigation prop
 
     const [isEnabled, setIsEnabled] = useState(false); // State for the toggle switch
     const toggleSwitch = () => {
-      setIsEnabled((previousState) => {
-          const newState = !previousState;
+      setIsEnabled((previousState) => { // Update the state of the switch when it is toggled
+          const newState = !previousState; // Toggle the switch state (true/false)
           if (newState) {
               Alert.alert('Notification', 'Notifications are enabled !');
           }
-          return newState;
+          return newState; // Return the new state
       });
     };
 
@@ -74,8 +75,8 @@ const SettingsScreen = () => { // Settings screen component with navigation prop
                         trackColor={{ false: "#767577", true: "#81b0ff" }}
                         thumbColor={isEnabled ? "#ff6464" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
+                        onValueChange={toggleSwitch} // Call the toggleSwitch function when the switch is toggled
+                        value={isEnabled} // Set the value of the switch to the state
                       />
         ) : (
             <TouchableOpacity onPress={item.onPress} style={styles.arrowButton}>
@@ -101,6 +102,7 @@ const SettingsScreen = () => { // Settings screen component with navigation prop
             contentContainerStyle={styles.list} // Add padding to the list
         />
         </View>
+        <NavBar />
     </GestureRecognizer>
   );
 };
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',

@@ -33,7 +33,7 @@ const Home = () => {
             >
                 <SafeAreaView style={{ flex: 1 }}>
                 <LinearGradient
-                    colors={['#FF0000', '#FF6347', '#FFA07A', '#FFF']} // Adjust gradient colors to your needs
+                    colors={['#FF6464', '#FF6347', '#FFA07A', '#FFF']} // Adjust gradient colors to your needs
                     style={styles.gradient}
                     start={{ x: 0, y: 0 }} // Adjust gradient direction to your needs
                     end={{ x: 1, y: 1 }} // Adjust gradient direction to your needs
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Oswald-Bold',
     },
     button: {
-        backgroundColor: '#ff0000',
+        backgroundColor: '#ff6464',
         padding: 10,
         borderRadius: 10,
         width: '100%',

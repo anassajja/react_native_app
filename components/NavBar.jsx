@@ -12,14 +12,19 @@ function NavBar() {
                 <Text style={styles.title}>Home</Text>
             </TouchableOpacity>
             <View style={styles.separator}></View>
-            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Settings')}>
-                <Icon name="cog" style={styles.icons} />
-                <Text style={styles.title}>Settings</Text>
+            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('AdminDashboard')}>
+                <Icon name="dashboard" style={styles.icons} />
+                <Text style={styles.title}>Dashboard</Text>
             </TouchableOpacity>
             <View style={styles.separator}></View>
             <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Profile')}>
                 <Icon name="user" style={styles.icons} />
                 <Text style={styles.title}>Profile</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Settings')}>
+                <Icon name="cog" style={styles.icons} />
+                <Text style={styles.title}>Settings</Text>
             </TouchableOpacity>
         </View>
     );
@@ -41,13 +46,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     title: {
-        color: '#FF0000',
+        color: '#FF6464',
         fontSize: 16,
         fontWeight: 'bold',
         marginTop: 4,
     },
     icons: {
-        color: '#FF0000',
+        color: '#FF6464',
         fontSize: 24,
     },
     separator: {
