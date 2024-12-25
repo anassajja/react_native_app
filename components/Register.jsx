@@ -28,23 +28,22 @@ const Register = () => {
       } else if (password !== password_confirmation) {
         setError('Passwords do not match');
         return;
-      } else {
+      } else { // Check if the name and password fields are empty or not
         setError('');
         try {
           const response = await axios.post('http://192.168.11.107:8000/api/register', {
             name,
             password,
-            password_confirmation,
             email,
           });
+          console.log(response.data);
           Toast.show({
             type: 'success',
             text1: 'Registration Successful',
             text2: 'You have successfully registered!',
           });
-          console.log(response.data);
           resetFields();
-        } catch (error) {
+        } catch (error) { // Catch any errors and log them to the console
           setError('Invalid credentials');
           Toast.show({
             type: 'error',
@@ -100,6 +99,7 @@ const Register = () => {
         </TouchableOpacity>
         <Text style={styles.text} onPress={() => navigation.navigate('Login')}>Already Have an Account?</Text>
         </View>
+        <Toast />
       </SafeAreaView>
     );
 };

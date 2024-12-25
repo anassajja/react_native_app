@@ -43,7 +43,7 @@ const Profile = () => {
     const getItemCount = (data) => data.length; // Get the number of items in the data array
 
     const renderForm = () => ( // Render the form with input fields and a submit button
-        <GestureRecognizer onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight} config={{velocityThreshold: 0.3, directionalOffsetThreshold: 80}} style={{flex: 1}}>
+        // <GestureRecognizer onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight} config={{velocityThreshold: 0.3, directionalOffsetThreshold: 80}} style={{flex: 1}}>
         <View style={styles.form}>
             <Text style={styles.label}>Name <Icon name="user" size={20} color="#FF6464" /></Text>
             <TextInput style={styles.input} placeholder="Aaron G" value={name} onChangeText={setName} />
@@ -74,7 +74,7 @@ const Profile = () => {
                 <Text style={styles.buttonText}>Save  <Icon name="save" size={20} color="#FFFF" /></Text>
             </TouchableOpacity>
         </View>
-        </GestureRecognizer>
+        // </GestureRecognizer>
     );
 
     return (

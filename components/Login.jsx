@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView} from 'react-native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -33,12 +33,12 @@ const Login = () => {
                     name,
                     password,
                 });
+                console.log(response.data);
                 Toast.show({
                     type: 'success',
                     text1: 'Welcome',
                     text2: `Welcome: ${response.data.user.name}`,
                 });
-                console.log(response.data);
                 resetFields();
             } catch (error) {
                 setError('Invalid credentials');
@@ -63,57 +63,60 @@ const Login = () => {
     return (
         <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
             <LinearGradient colors={['#FFE5E1', '#FFB3A7', 'red']} style={styles.container}>
-                <Text style={styles.title}>Select Your Role</Text>
-                <RadioButtonGroup
-                    containerStyle={styles.radioContainer}
-                    selected={current}
-                    onSelected={(value) => setCurrent(value)}
-                    radioBackground="#FF6F61"
-                >
-                    <RadioButtonItem value="teacher" label=""/>
-                    <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Teacher</Text>
-                    <RadioButtonItem value="student" label=""/>
-                    <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Student</Text>
-                    <RadioButtonItem value="admin" label="" />
-                    <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Admin</Text>
-                </RadioButtonGroup>
-                <View style={{ marginTop: -150 }}>
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    <Text style={styles.title}>Select Your Role</Text>
+                    <RadioButtonGroup
+                        containerStyle={styles.radioContainer}
+                        selected={current}
+                        onSelected={(value) => setCurrent(value)}
+                        radioBackground="#FF6F61"
+                    >
+                        <RadioButtonItem value="teacher" label=""/>
+                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Teacher</Text>
+                        <RadioButtonItem value="student" label=""/>
+                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Student</Text>
+                        <RadioButtonItem value="admin" label="" />
+                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Admin</Text>
+                    </RadioButtonGroup>
+                    <View style={{ marginTop: -150 }}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Username"
+                                placeholderTextColor="#FF6F61"
+                                value={name}
+                                onChangeText={setName}
+                            />
+                            <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
+                        </View>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Enter Username"
+                            placeholder="Enter Password"
                             placeholderTextColor="#FF6F61"
-                            value={name}
-                            onChangeText={setName}
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
                         />
-                        <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
+                        <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
                     </View>
-                </View>
-                <View style={{ marginTop: 10 }}>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Password"
-                        placeholderTextColor="#FF6F61"
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
+                    </View>
+                    {error ? <Text style={styles.error}>{error}</Text> : null}
+                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.buttonText}>Sign In</Text>
+                    </TouchableOpacity>
+                    <Text style={{ color: 'white', fontWeight: 'bold', bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
+                    <Text style={{ color: 'white', fontWeight: 'bold', bottom: -130 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
+                    <Image
+                        source={attendanceImage}
+                        style={styles.image}
+                        resizeMode="contain"
                     />
-                    <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
-                </View>
-                </View>
-                {error ? <Text style={styles.error}>{error}</Text> : null}
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Sign In</Text>
-                </TouchableOpacity>
-                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 290 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
-                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 270 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
-                <Image
-                    source={attendanceImage}
-                    style={styles.image}
-                    resizeMode="contain"
-                />
+                </ScrollView>
             </LinearGradient>
+            <Toast/>
         </GestureRecognizer>
     );
 };
@@ -125,19 +128,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
+    scrollContainer: {
+        flexGrow: 1, // Take the whole screen height
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
         marginBottom: 200,
         alignSelf: 'flex-start',
-        top: -20,
+        top: 0,
         marginHorizontal: 0,
     },
     radioContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        top: -180,
+        top: -150,
         marginHorizontal: 20,
         gap: 20,
 
