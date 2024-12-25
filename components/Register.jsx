@@ -31,7 +31,7 @@ const Register = () => {
       } else {
         setError('');
         try {
-          const response = await axios.post('http://192.168.11.106:8000/api/register', {
+          const response = await axios.post('http://192.168.11.107:8000/api/register', {
             name,
             password,
             password_confirmation,

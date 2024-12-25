@@ -23,13 +23,13 @@ const Login = () => {
     };
 
     const handleLogin = async () => {
-        if (!name || !password) {
+        if (!name || !password) { // Check if the name and password fields are empty or not
             setError('All fields are required');
             return;
         } else {
             setError('');
             try {
-                const response = await axios.post('http://192.168.11.106:8000/api/login', {
+                const response = await axios.post('http://192.168.11.107:8000/api/login', {
                     name,
                     password,
                 });
@@ -106,8 +106,8 @@ const Login = () => {
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
-                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 280 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
-                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 260 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 290 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
+                <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', bottom: 270 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
                 <Image
                     source={attendanceImage}
                     style={styles.image}
@@ -126,22 +126,21 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        position: 'absolute',
         fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
         marginBottom: 200,
         alignSelf: 'flex-start',
-        top: 50,
-        marginHorizontal: 20,
+        top: -20,
+        marginHorizontal: 0,
     },
     radioContainer: {
-        position: 'absolute',
         flexDirection: 'row',
         justifyContent: 'center',
-        top: 125,
+        top: -180,
         marginHorizontal: 20,
         gap: 20,
+
     },
     radioLabel: {
         fontSize: 60,
@@ -167,7 +166,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         // android (Android +5.0)
-        elevation: 10,
+        elevation: 5,
+        bottom: -80,
     },
     input: {
         flex: 1,
@@ -179,14 +179,12 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     button: {
-        position: 'absolute',
         backgroundColor: 'red',
         borderRadius: 15,
         paddingVertical: 15,
         paddingHorizontal: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        bottom: 310,
+        alignItems: 'center', // horizontal alignment of the text inside the button
+        bottom: -100,
         width: '100%',
 
     },
@@ -200,10 +198,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     image: {
-        position: 'absolute',
         width: 350,
         height: 350,
-        bottom: -90,
+        bottom: -140,
     },
 });
 
