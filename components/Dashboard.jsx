@@ -1,153 +1,215 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import NavBar from './NavBar';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { Calendar } from "react-native-calendars";
+import { LinearGradient } from "expo-linear-gradient";
+import SettingsScreen from "./Settings";
+import ProfileScreen from "./Profile";
 
-const AdminDashboard = () => {
+const DashboardScreen = ({ navigation }) => {
+    const [currentDate, setCurrentDate] = useState("");
+    const [currentTime, setCurrentTime] = useState("");
 
-    const navigation = useNavigation();
+    useEffect(() => {
+        const today = new Date();
+        const dateString = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        setCurrentDate(dateString);
 
-    const onSwipeRight = () => {
-        navigation.navigate('Profile');
-    }
+        const timer = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString());
+        }, 1000);
 
-    const onSwipeLeft = () => {
-        navigation.navigate('Login');
+        return () => {
+            clearInterval(timer); // Cleanup function to clear the interval when the component unmounts or changes
+        }
+
+    }, []);
+
+    const formatDateWithSuffix = (date) => {
+        const day = date.getDate(); // Get the day of the month (1-31)
+        const suffix = ["th", "st", "nd", "rd"]; // Suffixes for 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+        const v = day % 100; // Get the last two digits of the day
+        return day + (suffix[(v - 20) % 10] || suffix[v] || suffix[0]); // Return the day with the correct suffix (st, nd, rd, th) 
     };
 
     return (
-        <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={styles.container}>
+        <LinearGradient colors={["#ffe6e6", "#ffcccc"]} style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+            {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.welcomeText}>Welcome, anass.ajja@gmail.com</Text>
-                <Text style={styles.roleText}>Role: Admin</Text>
+                <Text style={styles.headerText}>Dashboard</Text>
+                <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                    <Ionicons name="menu" size={30} color="#000" style={styles.menuIcon} />
+                </TouchableOpacity>
             </View>
 
-            <View style={styles.cardContainer}>
-                <DashboardCard
-                icon="clipboard-list"
-                title="Filière"
-                description="Select a Filière"
-                iconLibrary="FontAwesome5"
-                />
-                <DashboardCard
-                icon="person-remove"
-                title="Absence"
-                description="Manage Student Absences"
-                iconLibrary="MaterialIcons"
-                />
-                <DashboardCard
-                icon="settings"
-                title="Module"
-                description="View or Create Modules"
-                iconLibrary="MaterialIcons"
-                />
-                <DashboardCard
-                icon="domain"
-                title="Department"
-                description="Manage Departments"
-                iconLibrary="MaterialIcons"
-                />
-                <DashboardCard
-                icon="chalkboard-teacher"
-                title="Teacher"
-                description="Manage Teachers"
-                iconLibrary="FontAwesome5"
-                />
-                <DashboardCard
-                icon="graduation-cap"
-                title="Student"
-                description="Manage Students"
-                iconLibrary="FontAwesome5"
-                />
+            {/* Time & Date Section */}
+            <View style={styles.timeDateContainer}>
+                <View style={styles.iconTimeContainer}>
+                    <Ionicons name="sunny" size={60} color="#F39C12" style={styles.icon} />
+                    <View style={styles.timeContainer}>
+                        <Text style={styles.timeText}>{currentTime}</Text>
+                        <Text style={styles.amPmText}>{new Date().toLocaleTimeString('en-US', { hour12: true }).split(' ')[1]}</Text> {/* AM or PM */} 
+                    </View>
+                </View>
+                <Text style={styles.subtitle}>Realtime Insight</Text>
+                <Text style={styles.todayText}>Today:</Text>
+                <Text style={styles.dateText}>
+                    {formatDateWithSuffix(new Date())} {new Date().toLocaleDateString("en-GB", {
+                        month: "long",
+                        year: "numeric",
+                    })}
+                </Text>
             </View>
-            <Text style={styles.footer}>© 2024 Absence Management System. All rights reserved.</Text>
-            </ScrollView>
-            <NavBar />
-        </GestureRecognizer>
+
+            {/* Calendar */}
+            <Calendar
+                current={currentDate}
+                markedDates={{
+                    [currentDate]: { selected: true, selectedColor: "red" },
+                }}
+                theme={{
+                    todayTextColor: "red",
+                    arrowColor: "black",
+                    textDayFontWeight: "bold",
+                    textMonthFontWeight: "bold",
+                    textDayHeaderFontWeight: "bold",
+                }}
+                style={styles.calendar}
+            />
+        </LinearGradient>
     );
 };
 
-const DashboardCard = ({ icon, title, description, iconLibrary }) => {
-  return (
-    <TouchableOpacity style={styles.card}>
-      {iconLibrary === "FontAwesome5" ? (
-        <FontAwesome5 name={icon} size={40} color="#007bff" />
-      ) : (
-        <MaterialIcons name={icon} size={40} color="#007bff" />
-      )}
-      <Text style={styles.cardTitle}>{title}</Text>
-      <Text style={styles.cardDescription}>{description}</Text>
-    </TouchableOpacity>
-  );
-};
+const Drawer = createDrawerNavigator();
+
+export default function App() {
+    return (
+        <Drawer.Navigator
+            screenOptions={{
+                drawerStyle: {
+                    backgroundColor: "#f7f7f7",
+                },
+                headerShown: false,
+                drawerPosition: 'right', // Open drawer on the right side
+            }}
+        >
+            <Drawer.Screen
+                name="Dashboard"
+                component={DashboardScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="home" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="settings" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="person" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+        </Drawer.Navigator>
+    );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: '#f4f4f9',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#ff6464',
-    width: '100%',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  welcomeText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  roleText: {
-    fontSize: 16,
-    color: '#fff',
-  },
-  cardContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap', // Wrap the cards to the next line if they don't fit
-    justifyContent: 'center',
-    gap: 0,
-  },
-  card: {
-    backgroundColor: '#fff',
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-    margin: 10,
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-  },
-  footer: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#999',
-    marginTop: 50,
-    textAlign: 'center',
-  },
+    container: {
+        flex: 1,
+    },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 20,
+        backgroundColor: "white",
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+    },
+    menuIcon: {
+        marginRight: 10,
+    },
+    headerText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    timeDateContainer: {
+        alignItems: "right", // Center the items horizontally
+        justifyContent: "right", // Center the items vertically
+        marginTop: 20,
+        marginBottom: 20,
+        marginRight: 20,
+        marginLeft: 20,
+        padding: 20,
+        backgroundColor: "white",
+        borderRadius: 15,
+        boxShadow: "0 10 10px rgba(227, 0, 0, 0.2)",
+        // elevation: 5,
+    },
+    iconTimeContainer: {
+        flexDirection: "row",
+        alignItems: "right",
+        justifyContent: "right",
+        marginBottom: 0,
+    },
+    icon: {
+        marginRight: 10,
+        marginTop: 10,
+    },
+    timeContainer: {
+        flexDirection: "row",
+        alignItems: "baseline",
+    },
+    timeText: {
+        fontSize: 28,
+        fontWeight: "bold",
+        color: "#333",
+        marginTop: 10,
+    },
+    amPmText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#333",
+        marginLeft: 5,
+    },
+    subtitle: {
+        fontSize: 14,
+        color: "#333",
+        fontWeight: "600",
+        marginLeft: 73,
+        marginTop: -20,
+        marginBottom: 20,
+    },
+    todayText: {
+        fontSize: 20,
+        color: "#555",
+        fontWeight: "bold",
+    },
+    dateText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    calendar: {
+        borderRadius: 15,
+        overflow: "hidden", // Clip the calendar inside the border radius of the parent
+        marginHorizontal: 20,
+        backgroundColor: "white",
+        boxShadow: "0 10 10px rgba(227, 0, 0, 0.2)",
+        // elevation: 5,
+    },
 });
-
-export default AdminDashboard;

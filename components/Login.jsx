@@ -57,7 +57,7 @@ const Login = () => {
     };
 
     const onSwipeLeft = () => {
-        navigation.navigate('AdminDashboard');
+        navigation.navigate('Dashboard');
     };
 
     return (

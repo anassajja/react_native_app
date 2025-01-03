@@ -11,8 +11,13 @@ function NavBar() {
                 <Icon name="home" style={styles.icons} />
                 <Text style={styles.title}>Home</Text>
             </TouchableOpacity>
+            {/* <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Menu')}>
+                <Icon name="bars" style={styles.icons} />
+                <Text style={styles.title}>Menu</Text>
+            </TouchableOpacity> */}
             <View style={styles.separator}></View>
-            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('AdminDashboard')}>
+            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
                 <Icon name="dashboard" style={styles.icons} />
                 <Text style={styles.title}>Dashboard</Text>
             </TouchableOpacity>

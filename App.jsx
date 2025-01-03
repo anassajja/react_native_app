@@ -1,5 +1,5 @@
 import * as React from 'react'; // Import the React library from the react package
-import { createStaticNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './components/Home';
 import LoginScreen from './components/Login';
@@ -7,57 +7,30 @@ import RegisterScreen from './components/Register';
 import ResetPasswordScreen from './components/Reset_password';
 import ProfileScreen from './components/Profile';
 import SettingsScreen from './components/Settings';
-import AdminDashboard from './components/Dashboard';
+import Menu from './components/Menu';
+import Dashboard from './components/Dashboard';
 
-const RootStack = createNativeStackNavigator({ // Create a new stack navigator called RootStack
-  screens: {
-    Home: {
-      screen: HomeScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    Login: {
-      screen: LoginScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    Register: {
-      screen: RegisterScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    ResetPassword: {
-      screen: ResetPasswordScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    Profile: {
-      screen: ProfileScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    Settings: {
-      screen: SettingsScreen,
-      options: {
-        headerShown: false,
-      },
-    },
-    AdminDashboard: {
-      screen: AdminDashboard,
-      options: {
-        headerShown: false,
-      },
-    },
-  },
-});
+const Stack = createNativeStackNavigator(); // Create a new stack navigator called Stack
 
-const Navigation = createStaticNavigation(RootStack); // Create a static navigation container with the RootStack navigator
+function RootStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
+      <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() { // Export the App component as the default export
-  return <Navigation />; // Return the Navigation component from the App component
+  return (
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
+  ); // Return the Navigation component from the App component
 }

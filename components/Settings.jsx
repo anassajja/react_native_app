@@ -60,6 +60,18 @@ const SettingsScreen = () => { // Settings screen component with navigation prop
     },
     {
       id: '5',
+      title: 'About',
+      icon: 'information-circle-outline',
+      onPress: () => alert('About'),
+    },
+    {
+      id: '6',
+      title: 'Logout',
+      icon: 'log-out-outline',
+      onPress: () => alert('Logout'),
+    },
+    {
+      id: '7',
       title: 'Support',
       icon: 'help-circle-outline',
       onPress: () => alert('Support'),

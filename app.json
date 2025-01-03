@@ -3,22 +3,23 @@
     "name": "frontend",
     "slug": "frontend",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
-    "icon": "./assets/splash.png", 
+    "icon": "./assets/splashh.png", 
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splashh.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F5F5F5"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": { 
       "adaptiveIcon": {  
-        "foregroundImage": "./assets/splash.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/splashh.png",
+        "backgroundColor": "#F5F5F5"
       }
     },
     "web": {
