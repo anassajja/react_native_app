@@ -6,6 +6,7 @@ import { Calendar } from "react-native-calendars";
 import { LinearGradient } from "expo-linear-gradient";
 import SettingsScreen from "./Settings";
 import ProfileScreen from "./Profile";
+import { Divider } from "react-native-paper";
 
 const DashboardScreen = ({ navigation }) => {
     const [currentDate, setCurrentDate] = useState("");
@@ -50,7 +51,7 @@ const DashboardScreen = ({ navigation }) => {
                     <Ionicons name="sunny" size={60} color="#F39C12" style={styles.icon} />
                     <View style={styles.timeContainer}>
                         <Text style={styles.timeText}>{currentTime}</Text>
-                        <Text style={styles.amPmText}>{new Date().toLocaleTimeString('en-US', { hour12: true }).split(' ')[1]}</Text> {/* AM or PM */} 
+                        {/* <Text style={styles.amPmText}>{new Date().toLocaleTimeString('en-US', { hour12: true }).split(' ')[1]}</Text>  */}
                     </View>
                 </View>
                 <Text style={styles.subtitle}>Realtime Insight</Text>
@@ -62,6 +63,8 @@ const DashboardScreen = ({ navigation }) => {
                     })}
                 </Text>
             </View>
+
+            <Divider style={styles.divider} />
 
             {/* Calendar */}
             <Calendar
@@ -90,13 +93,17 @@ export default function App() {
             screenOptions={{
                 drawerStyle: {
                     backgroundColor: "#f7f7f7",
+                    padding: 10,
+                    marginTop: 10,
+                    width: 300,
+                    height: 600,
                 },
                 headerShown: false,
                 drawerPosition: 'right', // Open drawer on the right side
             }}
         >
             <Drawer.Screen
-                name="Dashboard"
+                name="D_ashboard"
                 component={DashboardScreen}
                 options={{
                     drawerIcon: () => (
@@ -138,6 +145,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
+        shadowColor: "#ff0000",
+        elevation: 15,
     },
     menuIcon: {
         marginRight: 10,
@@ -150,15 +159,15 @@ const styles = StyleSheet.create({
     timeDateContainer: {
         alignItems: "right", // Center the items horizontally
         justifyContent: "right", // Center the items vertically
-        marginTop: 20,
-        marginBottom: 20,
+        marginTop: 40,
+        marginBottom: 40,
         marginRight: 20,
         marginLeft: 20,
         padding: 20,
         backgroundColor: "white",
         borderRadius: 15,
-        boxShadow: "0 10 10px rgba(227, 0, 0, 0.2)",
-        // elevation: 5,
+        shadowColor: "#ff0000",
+        elevation: 5,
     },
     iconTimeContainer: {
         flexDirection: "row",
@@ -180,12 +189,12 @@ const styles = StyleSheet.create({
         color: "#333",
         marginTop: 10,
     },
-    amPmText: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#333",
-        marginLeft: 5,
-    },
+    // amPmText: {
+    //     fontSize: 16,
+    //     fontWeight: "bold",
+    //     color: "#333",
+    //     marginLeft: 5,
+    // },
     subtitle: {
         fontSize: 14,
         color: "#333",
@@ -209,7 +218,15 @@ const styles = StyleSheet.create({
         overflow: "hidden", // Clip the calendar inside the border radius of the parent
         marginHorizontal: 20,
         backgroundColor: "white",
-        boxShadow: "0 10 10px rgba(227, 0, 0, 0.2)",
-        // elevation: 5,
+        shadowColor: "#ff0000",
+        elevation: 5,
     },
+    divider : {
+        height: 4,
+        backgroundColor: "rgba(255, 0, 0, 0.2)",
+        marginHorizontal: 20,
+        marginBottom: 40,
+        shadowColor: "#ff0000",
+        elevation: 15,
+    }
 });

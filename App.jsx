@@ -7,8 +7,8 @@ import RegisterScreen from './components/Register';
 import ResetPasswordScreen from './components/Reset_password';
 import ProfileScreen from './components/Profile';
 import SettingsScreen from './components/Settings';
-import Menu from './components/Menu';
-import Dashboard from './components/Dashboard';
+import MenuScreen from './components/Menu';
+import DashboardScreen from './components/Dashboard';
 
 const Stack = createNativeStackNavigator(); // Create a new stack navigator called Stack
 
@@ -21,8 +21,8 @@ function RootStack() {
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
-      <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
+      <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
