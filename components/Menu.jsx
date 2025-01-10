@@ -1,72 +1,72 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import NavBar from './NavBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Menu = () => {
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
 
-    const navigation = useNavigation();
-
-    const onSwipeRight = () => {
-        navigation.navigate('Profile');
-    }
-
-    const onSwipeLeft = () => {
-        navigation.navigate('Login');
-    };
+    useEffect(() => {
+        const fetchUser = async () => {
+            const response = await axios.get('http://192.168.11.105:8000/api/user');
+            setEmail(response.data.email);
+            setRole(response.data.role);
+        }
+        fetchUser();
+    }, []);
 
     return (
-        <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.welcomeText}>Welcome, anass.ajja@gmail.com</Text>
-                <Text style={styles.roleText}>Role: </Text>
-            </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Welcome, {email}</Text>
+          <Text style={styles.roleText}>Role: {role}</Text>
+        </View>
 
-            <View style={styles.cardContainer}>
-                <MenuCard
-                icon="clipboard-list"
-                title="Filière"
-                description="Select a Filière"
-                iconLibrary="FontAwesome5"
-                />
-                <MenuCard
-                icon="person-remove"
-                title="Absence"
-                description="Manage Student Absences"
-                iconLibrary="MaterialIcons"
-                />
-                <MenuCard
-                icon="settings"
-                title="Module"
-                description="View or Create Modules"
-                iconLibrary="MaterialIcons"
-                />
-                <MenuCard
-                icon="domain"
-                title="Department"
-                description="Manage Departments"
-                iconLibrary="MaterialIcons"
-                />
-                <MenuCard
-                icon="chalkboard-teacher"
-                title="Teacher"
-                description="Manage Teachers"
-                iconLibrary="FontAwesome5"
-                />
-                <MenuCard
-                icon="graduation-cap"
-                title="Student"
-                description="Manage Students"
-                iconLibrary="FontAwesome5"
-                />
-            </View>
-            <Text style={styles.footer}>© 2024 Absence Management System. All rights reserved.</Text>
-            </ScrollView>
-            <NavBar />
-        </GestureRecognizer>
+        <View style={styles.cardContainer}>
+          <MenuCard
+          icon="clipboard-list"
+          title="Filière"
+          description="Select a Filière"
+          iconLibrary="FontAwesome5"
+          />
+          <MenuCard
+          icon="person-remove"
+          title="Absence"
+          description="Manage Student Absences"
+          iconLibrary="MaterialIcons"
+          />
+          <MenuCard
+          icon="settings"
+          title="Module"
+          description="View or Create Modules"
+          iconLibrary="MaterialIcons"
+          />
+          <MenuCard
+          icon="domain"
+          title="Department"
+          description="Manage Departments"
+          iconLibrary="MaterialIcons"
+          />
+          <MenuCard
+          icon="chalkboard-teacher"
+          title="Teacher"
+          description="Manage Teachers"
+          iconLibrary="FontAwesome5"
+          />
+          <MenuCard
+          icon="graduation-cap"
+          title="Student"
+          description="Manage Students"
+          iconLibrary="FontAwesome5"
+          />
+        </View>
+        <View style={styles.footerContainer}>
+        <Text style={styles.footer}>© {new Date().getFullYear()} Absence Management System. All rights reserved.</Text>
+        </View>
+      </SafeAreaView>
     );
 };
 
@@ -88,14 +88,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f4f4f9',
     alignItems: 'center',
   },
   header: {
-    backgroundColor: '#ff6464',
+    backgroundColor: 'rgba(255, 100, 100, 0.8)', // Changed to rgba for transparency
     width: '100%',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 25,
     marginBottom: 20,
     alignItems: 'center',
   },
@@ -141,11 +140,18 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+  footerContainer: {
+    bottom: -20,
+    position: 'relative',
+    width: '100%',
+    backgroundColor: 'transparent',
+    padding: 10,
+  },
   footer: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#999',
-    marginTop: 50,
+    color: '#333',
+    marginTop: 20,
     textAlign: 'center',
   },
 });

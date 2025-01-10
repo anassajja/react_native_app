@@ -8,40 +8,57 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import attendanceImage from '../assets/attendance-management-system.png';
+import Cookies from 'js-cookie';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
-    const [name, setName] = useState('');
+    const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('student');
     const [error, setError] = useState('');
-    const [current, setCurrent] = useState("teacher");
+    const [showPassword, setShowPassword] = useState(false);
     const navigation = useNavigation();
 
     const resetFields = () => {
-        setName('');
+        setLogin('');
         setPassword('');
+        setRole('');
         setError('');
     };
 
     const handleLogin = async () => {
-        if (!name || !password) { // Check if the name and password fields are empty or not
+        if (!login || !password) { // Check if the name and password fields are empty or not
             setError('All fields are required');
             return;
         } else {
             setError('');
             try {
-                const response = await axios.post('http://192.168.11.103:8000/api/login', {
-                    name,
+                const response = await axios.post('http://192.168.11.105:8000/api/login', {
+                    login,
                     password,
+                    role,
                 });
+                const token = response.data.sanctum_token;
+                Cookies.set('authToken', token, { expire : 7 });
+                await AsyncStorage.setItem('authToken', token); // Store the token in the local storage
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set the token in the header for all requests to the server
                 console.log(response.data);
                 Toast.show({
                     type: 'success',
                     text1: 'Welcome',
-                    text2: `Welcome: ${response.data.user.name}`,
+                    text2: `Welcome: ${response.data.user.username}`,
                 });
                 resetFields();
+                if (role === 'teacher') {
+                    navigation.navigate('Teacher');
+                } else if (role === 'student') {
+                    navigation.navigate('Student');
+                } else if (role === 'admin') {
+                    navigation.navigate('Dashboard'); 
+                }
             } catch (error) {
-                setError('Invalid credentials');
+                setError('Invalid credentials, please try again');
+                console.log(error);
                 Toast.show({
                     type: 'error',
                     text1: 'Error',
@@ -67,8 +84,8 @@ const Login = () => {
                     <Text style={styles.title}>Select Your Role</Text>
                     <RadioButtonGroup
                         containerStyle={styles.radioContainer}
-                        selected={current}
-                        onSelected={(value) => setCurrent(value)}
+                        selected={role}
+                        onSelected={(value) => setRole(value)}
                         radioBackground="#FF6F61"
                     >
                         <RadioButtonItem value="teacher" label=""/>
@@ -82,10 +99,10 @@ const Login = () => {
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Enter Username"
+                                placeholder="Enter Username or Email"
                                 placeholderTextColor="#FF6F61"
-                                value={name}
-                                onChangeText={setName}
+                                value={login}
+                                onChangeText={setLogin}
                             />
                             <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
                         </View>
@@ -96,16 +113,19 @@ const Login = () => {
                             style={styles.input}
                             placeholder="Enter Password"
                             placeholderTextColor="#FF6F61"
-                            secureTextEntry={true}
+                            secureTextEntry={!showPassword} // Hide the password by default
                             value={password}
                             onChangeText={setPassword}
                         />
                         <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}> 
+                            <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
+                        </TouchableOpacity>
                     </View>
                     </View>
                     {error ? <Text style={styles.error}>{error}</Text> : null}
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.buttonText} onPress={() => navigation.navigate('AdminDashboard')}>Sign In</Text>
+                        <Text style={styles.buttonText}>Sign In</Text>
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontWeight: 'bold', bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
                     <Text style={{ color: 'white', fontWeight: 'bold', bottom: -130 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>

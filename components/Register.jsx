@@ -31,7 +31,7 @@ const Register = () => {
       } else { // Check if the name and password fields are empty or not
         setError('');
         try {
-          const response = await axios.post('http://192.168.11.103:8000/api/register', {
+          const response = await axios.post('http://192.168.11.105:8000/api/register', {
             name,
             password,
             email,

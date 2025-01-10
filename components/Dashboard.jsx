@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Calendar } from "react-native-calendars";
@@ -7,6 +7,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import SettingsScreen from "./Settings";
 import ProfileScreen from "./Profile";
 import { Divider } from "react-native-paper";
+import HomeScreen from "./Home";
+import AbsencesScreen from "./Absences";
+import StudentsScreen from "./Students";
+import TeachersScreen from "./Teachers";
+import CoursesScreen from "./Courses";
+import ModulesScreen from "./Modules";
+import DepartmentsScreen from "./Departments";
+import FieldsScreen from "./Fields";
+import MenuView from "./Menu";
+
 
 const DashboardScreen = ({ navigation }) => {
     const [currentDate, setCurrentDate] = useState("");
@@ -31,56 +41,67 @@ const DashboardScreen = ({ navigation }) => {
         const day = date.getDate(); // Get the day of the month (1-31)
         const suffix = ["th", "st", "nd", "rd"]; // Suffixes for 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
         const v = day % 100; // Get the last two digits of the day
-        return day + (suffix[(v - 20) % 10] || suffix[v] || suffix[0]); // Return the day with the correct suffix (st, nd, rd, th) 
+        const daySuffix = (suffix[(v - 20) % 10] || suffix[v] || suffix[0]); // Return the day with the correct suffix (st, nd, rd, th) 
+        return { day, daySuffix}; // Return the day and the suffix as an object
     };
 
     return (
         <LinearGradient colors={["#ffe6e6", "#ffcccc"]} style={styles.container}>
             <StatusBar barStyle="dark-content" />
-            {/* Header */}
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Dashboard</Text>
-                <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                    <Ionicons name="menu" size={30} color="#000" style={styles.menuIcon} />
-                </TouchableOpacity>
-            </View>
-
-            {/* Time & Date Section */}
-            <View style={styles.timeDateContainer}>
-                <View style={styles.iconTimeContainer}>
-                    <Ionicons name="sunny" size={60} color="#F39C12" style={styles.icon} />
-                    <View style={styles.timeContainer}>
-                        <Text style={styles.timeText}>{currentTime}</Text>
-                        {/* <Text style={styles.amPmText}>{new Date().toLocaleTimeString('en-US', { hour12: true }).split(' ')[1]}</Text>  */}
-                    </View>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>Dashboard</Text>
+                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                        <Ionicons name="menu" size={30} color="#000" style={styles.menuIcon} />
+                    </TouchableOpacity>
                 </View>
-                <Text style={styles.subtitle}>Realtime Insight</Text>
-                <Text style={styles.todayText}>Today:</Text>
-                <Text style={styles.dateText}>
-                    {formatDateWithSuffix(new Date())} {new Date().toLocaleDateString("en-GB", {
-                        month: "long",
-                        year: "numeric",
-                    })}
-                </Text>
-            </View>
 
-            <Divider style={styles.divider} />
+                {/* Time & Date Section */}
+                <View style={styles.timeDateContainer}>
+                    <View style={styles.iconTimeContainer}>
+                        <Ionicons name="sunny" size={60} color="#F39C12" style={styles.icon} />
+                        <View style={styles.timeContainer}>
+                            <Text style={styles.timeText}>{currentTime}</Text>
+                            {/* <Text style={styles.amPmText}>{new Date().toLocaleTimeString('en-US', { hour12: true }).split(' ')[1]}</Text>  */}
+                        </View>
+                    </View>
+                    <Text style={styles.subtitle}>Realtime Insight</Text>
+                    <Text style={styles.todayText}>Today:</Text>
+                    <Text style={styles.dateText}>
+                        {formatDateWithSuffix(new Date()).day}
+                        <Text style={styles.dateSuffixText}>{formatDateWithSuffix(new Date()).daySuffix}</Text>
+                        {` ${new Date().toLocaleDateString("en-GB", {
+                            month: "long",
+                            year: "numeric",
+                        })}`}
+                    </Text>
+                </View>
 
-            {/* Calendar */}
-            <Calendar
-                current={currentDate}
-                markedDates={{
-                    [currentDate]: { selected: true, selectedColor: "red" },
-                }}
-                theme={{
-                    todayTextColor: "red",
-                    arrowColor: "black",
-                    textDayFontWeight: "bold",
-                    textMonthFontWeight: "bold",
-                    textDayHeaderFontWeight: "bold",
-                }}
-                style={styles.calendar}
-            />
+                <Divider style={styles.divider} />
+
+                {/* Calendar */}
+                <View style={styles.calendarContainer}>
+                    <Calendar
+                        current={currentDate}
+                        markedDates={{
+                            [currentDate]: { selected: true, selectedColor: "red" },
+                        }}
+                        theme={{
+                            todayTextColor: "red",
+                            arrowColor: "black",
+                            textDayFontWeight: "bold",
+                            textMonthFontWeight: "bold",
+                            textDayHeaderFontWeight: "bold",
+                        }}
+                        style={styles.calendar}
+                    />
+                </View>
+
+                <Divider style={styles.divider} />
+
+                <MenuView />
+            </ScrollView>
         </LinearGradient>
     );
 };
@@ -103,8 +124,17 @@ export default function App() {
             }}
         >
             <Drawer.Screen
-                name="D_ashboard"
+                name="Dash_board"
                 component={DashboardScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="calendar-outline" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Home"
+                component={HomeScreen}
                 options={{
                     drawerIcon: () => (
                         <Ionicons name="home" size={22} color="#ff6347" />
@@ -112,11 +142,65 @@ export default function App() {
                 }}
             />
             <Drawer.Screen
-                name="Settings"
-                component={SettingsScreen}
+                name="Absences"
+                component={AbsencesScreen}
                 options={{
                     drawerIcon: () => (
-                        <Ionicons name="settings" size={22} color="#ff6347" />
+                        <Ionicons name="checkmark-done" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Students"
+                component={StudentsScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="people" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Teachers"
+                component={TeachersScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="people" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Courses"
+                component={CoursesScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="book" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Modules"
+                component={ModulesScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="book" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Departments"
+                component={DepartmentsScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="school" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
+            <Drawer.Screen
+                name="Fields"
+                component={FieldsScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="school" size={22} color="#ff6347" />
                     ),
                 }}
             />
@@ -129,6 +213,15 @@ export default function App() {
                     ),
                 }}
             />
+            <Drawer.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                    drawerIcon: () => (
+                        <Ionicons name="settings" size={22} color="#ff6347" />
+                    ),
+                }}
+            />
         </Drawer.Navigator>
     );
 }
@@ -137,6 +230,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    scrollViewContent: {
+        flexGrow: 1,
+    },
+    calendarContainer: {
+        marginBottom: 40,
+    },
+
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -212,6 +312,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: "#000",
+        position: 'relative', // Position the suffix relative to the day
+        display: 'inline-flex',
+    },
+    dateSuffixText: {
+        fontSize: 14,
+        fontWeight: 600,
+        color: "#333",
+        position: 'absolute', // Position the suffix absolutely to the day
+        top: -5,
+        right: -10,
     },
     calendar: {
         borderRadius: 15,
