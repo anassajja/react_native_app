@@ -33,7 +33,7 @@ const Login = () => {
         } else {
             setError('');
             try {
-                const response = await axios.post('http://192.168.11.105:8000/api/login', {
+                const response = await axios.post('http://192.168.11.104:8000/api/login', {
                     login,
                     password,
                     role,
@@ -127,8 +127,12 @@ const Login = () => {
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Sign In</Text>
                     </TouchableOpacity>
-                    <Text style={{ color: 'white', fontWeight: 'bold', bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>Forgot password?</Text> 
-                    <Text style={{ color: 'white', fontWeight: 'bold', bottom: -130 }} onPress={() => navigation.navigate('Register')}>Don't have an account? Register</Text>
+                    <TouchableOpacity style={{ bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ bottom: -125 }} onPress={() => navigation.navigate('Register')}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Don't have an account? Sign Up</Text>
+                    </TouchableOpacity>
                     <Image
                         source={attendanceImage}
                         style={styles.image}
@@ -146,7 +150,6 @@ const styles = StyleSheet.create({
         flex: 1, // Take the whole screen height 
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
     },
     scrollContainer: {
         flexGrow: 1, // Take the whole screen height  
@@ -174,8 +177,6 @@ const styles = StyleSheet.create({
         fontSize: 60,
         color: 'black',
         marginHorizontal: 10,
-
-
     },
     inputContainer: {
         flexDirection: 'row',

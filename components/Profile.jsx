@@ -139,8 +139,6 @@ const Profile = () => {
                     <TouchableOpacity style={styles.changePasswordButton}>
                         <Text style={styles.changePasswordText}>Change Password  <Icon name="lock" size={20} color="#FFFFFF" /></Text>
                     </TouchableOpacity>
-                    <Text>Old Password</Text>
-                        <TextInput style={styles.input} placeholder="Old Password" secureTextEntry={true} />
 
                     <TouchableOpacity style={styles.logoutButton}>
                         <Text style={styles.logoutText}>Logout  <Icon name="sign-out" size={20} color="#FFFFFF" /></Text> 
