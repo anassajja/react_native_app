@@ -2,6 +2,16 @@
   "name": "frontend",
   "version": "1.0.0",
   "main": "index.js",
+  "expo": {
+    "name": "your-app-name",
+    "slug": "your-app-slug",
+    "version": "1.0.0",
+    "permissions": [
+      "CAMERA",
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE"
+    ]
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -21,6 +31,7 @@
     "babel": "^6.23.0",
     "dayjs": "^1.11.13",
     "expo": "~52.0.25",
+    "expo-image-picker": "^16.0.4",
     "expo-linear-gradient": "~14.0.2",
     "expo-radio-button": "^1.0.8",
     "expo-status-bar": "~2.0.1",
@@ -35,6 +46,7 @@
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.12.4",
     "react-native-gesture-handler": "~2.20.2",
+    "react-native-image-picker": "^7.2.3",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^5.12.5",

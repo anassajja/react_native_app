@@ -16,7 +16,7 @@ const Menu = () => {
             const token = tokenLocalStorage || tokenCookie;
             if (token) {
                 try {
-                    const response = await axios.get('http://192.168.11.104:8000/api/user', {
+                    const response = await axios.get('http://192.168.11.102:8000/api/user', {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         }

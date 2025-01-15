@@ -38,7 +38,7 @@ const Register = () => {
         } else {
             setError('');
             try {
-                const response = await axios.post('http://192.168.11.104:8000/api/register', {
+                const response = await axios.post('http://192.168.11.102:8000/api/register', {
                     role,
                     username,
                     email,
@@ -52,15 +52,21 @@ const Register = () => {
                     text2: `Welcome: ${response.data.user.username}`,
                 });
                 resetFields();
-                if (role === 'teacher') {
-                    navigation.navigate('Teacher');
-                } else if (role === 'student') {
-                    navigation.navigate('Student');
-                } else if (role === 'admin') {
-                    navigation.navigate('Dashboard');
-                }
+                setTimeout(() => {
+                    if (role === 'teacher') {
+                        navigation.navigate('Teacher');
+                    } else if (role === 'student') {
+                        navigation.navigate('Student');
+                    } else if (role === 'admin') {
+                        navigation.navigate('Dashboard');
+                    }
+                }, 1000); // 1 second delay
             } catch (error) {
-                setError(error.response?.data?.message || 'Invalid credentials, please try again');
+                if (error.response && error.response.status === 422) {
+                    setError(error.response.data.message || 'Validation error, please check your input');
+                } else {
+                    setError('Invalid credentials, please try again');
+                }
                 console.log(error);
                 Toast.show({
                     type: 'error',
@@ -84,93 +90,98 @@ const Register = () => {
         <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
             <LinearGradient colors={['#FFE5E1', '#FFB3A7', '#ff6464']} style={styles.container}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                    <Text style={styles.title}>Register</Text>
-                    <View style={styles.dropdownContainer}>
-                        {/* <Text style={styles.dropdownLabel}>Select Your Role</Text> */}
-                        <Dropdown
-                            data={[
-                                { label: 'Teacher', value: 'teacher' },
-                                { label: 'Student', value: 'student' },
-                                { label: 'Admin', value: 'admin' }
-                            ]}
-                            labelField="label"
-                            valueField="value"
-                            placeholder="Select Role"
-                            value={role}
-                            onChange={item => setRole(item.value)}
-                            style={styles.dropdown}
-                            placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            containerStyle={styles.dropdownInnerContainer}
-                            renderLeftIcon={() => (
-                                <MaterialIcons name="person" size={24} color="#FF6F61" style={styles.dropdownIcon} />
-                            )}
-                        />
-                    </View>
-                    <View>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Username"
-                                placeholderTextColor="#FF6F61"
-                                value={username}
-                                onChangeText={setUsername}
+                    <View style={styles.formContainer}>
+                        <Text style={styles.title}>Register</Text>
+                        <View style={styles.dropdownContainer}>
+                            {/* <Text style={styles.dropdownLabel}>Select Your Role</Text> */}
+                            <Dropdown
+                                data={[
+                                    { label: 'Teacher', value: 'teacher' },
+                                    { label: 'Student', value: 'student' },
+                                    { label: 'Admin', value: 'admin' }
+                                ]}
+                                labelField="label"
+                                valueField="value"
+                                placeholder="Select Role"
+                                value={role}
+                                onChange={item => setRole(item.value)}
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                containerStyle={styles.dropdownInnerContainer}
+                                renderLeftIcon={() => (
+                                    <MaterialIcons name="person" size={24} color="#FF6F61" style={styles.dropdownIcon} />
+                                )}
                             />
-                            <MaterialIcons name="person" size={24} color="#FF6F61" style={styles.icon} />
                         </View>
-                    </View>
-                    <View>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Email"
-                                placeholderTextColor="#FF6F61"
-                                value={email}
-                                onChangeText={setEmail}
-                            />
-                            <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
+                        <View>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter Username"
+                                    placeholderTextColor="#FF6F61"
+                                    value={username}
+                                    onChangeText={setUsername}
+                                />
+                                <MaterialIcons name="person" size={24} color="#FF6F61" style={styles.icon} />
+                            </View>
                         </View>
-                    </View>
-                    <View>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Password"
-                                placeholderTextColor="#FF6F61"
-                                secureTextEntry={!showPassword}
-                                value={password}
-                                onChangeText={setPassword}
-                            />
-                            <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
-                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
-                            </TouchableOpacity>
+                        <View>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter Email"
+                                    placeholderTextColor="#FF6F61"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                />
+                                <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
+                            </View>
                         </View>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Password Confirmation"
-                                placeholderTextColor="#FF6F61"
-                                secureTextEntry={!showPassword}
-                                value={password_confirmation}
-                                onChangeText={setPassword_confirmation}
-                            />
-                            <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
-                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
-                            </TouchableOpacity>
+                        <View>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter Password"
+                                    placeholderTextColor="#FF6F61"
+                                    secureTextEntry={!showPassword}
+                                    value={password}
+                                    onChangeText={setPassword}
+                                />
+                                <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                    <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter Password Confirmation"
+                                    placeholderTextColor="#FF6F61"
+                                    secureTextEntry={!showPassword}
+                                    value={password_confirmation}
+                                    onChangeText={setPassword_confirmation}
+                                />
+                                <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                    <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                     {error ? <Text style={styles.error}>{error}</Text> : null}
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Register</Text>
                     </TouchableOpacity>
-                    <Text style={{ color: 'white', fontWeight: 'bold', bottom: -100 }} onPress={() => navigation.navigate('Login')}>Already have an account? Login</Text>
-                    <Image
-                        source={attendanceImage}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
+                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Already have an account? Sign In</Text>
+                    </TouchableOpacity>
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={attendanceImage}
+                            style={styles.image} 
+                        />
+                    </View>
                 </ScrollView>
             </LinearGradient>
             <Toast />
@@ -180,7 +191,6 @@ const Register = () => {
 
 const styles = StyleSheet.create({
     container: {
-        position: 'relative', // To position the button at the bottom of the screen
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -189,53 +199,55 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
     },
     scrollContainer: {
-        flexGrow: 1,
+        flexGrow: 1, // Take the whole screen height
         justifyContent: 'center',
+        alignItems: 'center',
+    },
+    formContainer: {
+        marginTop: 20,
+        width: '100%',
+        justifyContent: 'space-between', // Align the children with space in between 
         alignItems: 'center',
     },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
-        marginBottom: 80,
         alignSelf: 'center',
-        top: 20,
-        marginHorizontal: 0,
+        marginBottom: 40,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFE5E1',
-        color: '#FF6F61',
+        color: '#FF6F61', // Text color 
         fontWeight: 'bold',
         borderRadius: 15,
         paddingHorizontal: 15,
         marginBottom: 20,
         width: '100%',
         shadowColor: 'red',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 15, // Shadow radius 
         elevation: 5,
     },
     input: {
         flex: 1,
         height: 50,
         fontSize: 16,
-        color: '#FF6F61',
+        color: '#000',
     },
     icon: {
         marginRight: 10,
     },
     button: {
-        position: 'absolute', // To position the button at the bottom of the screen
         backgroundColor: '#ff6464',
         borderRadius: 15,
         paddingVertical: 15,
         paddingHorizontal: 40,
         alignItems: 'center',
-        bottom: 300, // At the bottom of the screen 
         width: '100%',
+        marginBottom: 20,
+        marginTop: 10,
     },
     buttonText: {
         color: '#FFF',
@@ -244,17 +256,23 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        marginBottom: 15,
-        top: 90,
+        marginTop: 10,
+        fontWeight: 500,
+        fontSize: 16,
+        textAlign: 'center', // Center the error text
+    },
+    imageContainer: {
+        width: '100%',
+        alignItems: 'center', // Center the image horizontally
+        justifyContent: 'center', // Center the image vertically
     },
     image: {
-        width: 350,
-        height: 350,
-        bottom: -120,
-    },
+        width: 300, // Adjust the width as needed
+        height: 300, // Adjust the height as needed
+        resizeMode: 'contain', // Maintain aspect ratio
+    },    
     dropdownContainer: {
         width: '100%',
-        marginTop: 0,
         marginBottom: 20,
     },
     dropdownLabel: {

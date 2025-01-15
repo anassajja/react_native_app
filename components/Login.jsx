@@ -10,6 +10,7 @@ import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import attendanceImage from '../assets/attendance-management-system.png';
 import Cookies from 'js-cookie';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Import the SafeAreaView component from the react-native-safe-area-context library
 
 const Login = () => {
     const [login, setLogin] = useState('');
@@ -33,7 +34,7 @@ const Login = () => {
         } else {
             setError('');
             try {
-                const response = await axios.post('http://192.168.11.104:8000/api/login', {
+                const response = await axios.post('http://192.168.11.102:8000/api/login', {
                     login,
                     password,
                     role,
@@ -49,13 +50,16 @@ const Login = () => {
                     text2: `Welcome: ${response.data.user.username}`,
                 });
                 resetFields();
-                if (role === 'teacher') {
-                    navigation.navigate('Teacher');
-                } else if (role === 'student') {
-                    navigation.navigate('Student');
-                } else if (role === 'admin') {
-                    navigation.navigate('Dashboard'); 
-                }
+                setTimeout(() => {
+                    if (role === 'teacher') {
+                        navigation.navigate('Teacher');
+                    } else if (role === 'student') {
+                        navigation.navigate('Student');
+                    } else if (role === 'admin') {
+                        navigation.navigate('Dashboard');
+                    }
+                }, 1000);
+
             } catch (error) {
                 setError('Invalid credentials, please try again');
                 console.log(error);
@@ -79,23 +83,24 @@ const Login = () => {
 
     return (
         <GestureRecognizer onSwipeRight={onSwipeRight} onSwipeLeft={onSwipeLeft} config={{ velocityThreshold: 0.3, directionalOffsetThreshold: 80 }} style={{ flex: 1 }}>
-            <LinearGradient colors={['#FFE5E1', '#FFB3A7', '#ff6464']} style={styles.container}>
-                <ScrollView contentContainerStyle={styles.scrollContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                    <Text style={styles.title}>Select Your Role</Text>
-                    <RadioButtonGroup
-                        containerStyle={styles.radioContainer}
-                        selected={role}
-                        onSelected={(value) => setRole(value)}
-                        radioBackground="#FF6F61"
-                    >
-                        <RadioButtonItem value="teacher" label=""/>
-                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Teacher</Text>
-                        <RadioButtonItem value="student" label=""/>
-                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Student</Text>
-                        <RadioButtonItem value="admin" label="" />
-                        <Text style={{ fontWeight: 'bold' , marginLeft: -20}}>Admin</Text>
-                    </RadioButtonGroup>
-                    <View style={{ marginTop: -150 }}>
+            <LinearGradient colors={['#FFE5E1', '#FFB3A7', '#ff6464']} style={{ flex: 1 }}>
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.title}>Login</Text>
+                        <Text style={styles.selectRoleLabel}>Select Role :</Text>
+                        <RadioButtonGroup
+                            containerStyle={styles.radioContainer}
+                            selected={role}
+                            onSelected={(value) => setRole(value)}
+                            radioBackground="#FF6F61"
+                        >
+                            <RadioButtonItem value="teacher" label=""/>
+                            <Text style={{ fontWeight: 'bold' }}>Teacher</Text>
+                            <RadioButtonItem value="student" label=""/>
+                            <Text style={{ fontWeight: 'bold' }}>Student</Text>
+                            <RadioButtonItem value="admin" label="" />
+                            <Text style={{ fontWeight: 'bold' }}>Admin</Text>
+                        </RadioButtonGroup>
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}
@@ -106,39 +111,45 @@ const Login = () => {
                             />
                             <MaterialIcons name="email" size={24} color="#FF6F61" style={styles.icon} />
                         </View>
-                    </View>
-                    <View style={{ marginTop: 10 }}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter Password"
-                            placeholderTextColor="#FF6F61"
-                            secureTextEntry={!showPassword} // Hide the password by default
-                            value={password}
-                            onChangeText={setPassword}
-                        />
-                        <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
-                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}> 
-                            <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
+
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Password"
+                                placeholderTextColor="#FF6F61"
+                                secureTextEntry={!showPassword} // Hide the password by default
+                                value={password}
+                                onChangeText={setPassword}
+                            />
+                            <FontAwesome name="lock" size={24} color="#FF6F61" style={styles.icon} />
+                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}> 
+                                <FontAwesome name={showPassword ? 'eye' : 'eye-slash'} size={24} color="#FF6F61" />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.errorContainer}>
+                            {error ? <Text style={styles.error}>{error}</Text> : null} 
+                        </View>
+
+                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                            <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
+
                     </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 5 }}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 20}}>Don't have an account? Sign Up</Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={attendanceImage}
+                            style={styles.image} 
+                        />
                     </View>
-                    {error ? <Text style={styles.error}>{error}</Text> : null}
-                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.buttonText}>Sign In</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ bottom: -120 }} onPress={() => navigation.navigate('ResetPassword')}>
-                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Forgot Password?</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ bottom: -125 }} onPress={() => navigation.navigate('Register')}>
-                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Don't have an account? Sign Up</Text>
-                    </TouchableOpacity>
-                    <Image
-                        source={attendanceImage}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </ScrollView>
+                </SafeAreaView>
             </LinearGradient>
             <Toast/>
         </GestureRecognizer>
@@ -147,36 +158,40 @@ const Login = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, // Take the whole screen height 
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex: 1, // Fill the container with the background color
+        justifyContent: 'center', // vertical alignment of the children
+        alignItems: 'center', // horizontal alignment of the children
+        height: '100%',
+        width: '100%',
+        paddingRight: 20,
+        paddingLeft: 20,
     },
-    scrollContainer: {
-        flexGrow: 1, // Take the whole screen height  
-        justifyContent: 'center',
+    formContainer: {
+        marginTop: 20,
+        width: '100%',
+        justifyContent: 'space-between', // Align the children with space in between 
         alignItems: 'center',
     },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
-        marginBottom: 200,
-        alignSelf: 'flex-start',
-        top: 0,
-        marginHorizontal: 0,
+        alignSelf: 'center',
+        marginBottom: 40,
+    },
+    selectRoleLabel: {
+        color: 'black',
+        fontSize: 18,
+        fontWeight: 600,
+        marginBottom: 20,
+        alignSelf: 'flex-start', // Align the label to the start of the screen
     },
     radioContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        top: -150,
-        marginHorizontal: 20,
-        gap: 20,
-
-    },
-    radioLabel: {
-        fontSize: 60,
-        color: 'black',
         marginHorizontal: 10,
+        marginBottom: 20,
+        gap: 10,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -188,21 +203,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: 15,
         width: '100%',
-        // boxShadow: '5 10px 20px rgba(43, 255, 0, 0.1)',
-        // ios
         shadowColor: 'red',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        // android (Android +5.0)
-        elevation: 5,
-        bottom: -80,
+        shadowRadius: 15, // Android Only
+        elevation: 5, // Android Only
     },
     input: {
-        flex: 1,
+        flex: 1, // Take the remaining space in the container
         height: 50,
         fontSize: 16,
-        color: '#FF6F61',
+        color: '#000',
     },
     icon: {
         marginRight: 10,
@@ -213,24 +222,35 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 40,
         alignItems: 'center', // horizontal alignment of the text inside the button
-        bottom: -100,
         width: '100%',
-
+        marginTop: 20,
+        marginBottom: 20,
     },
     buttonText: {
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold',
     },
+    errorContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     error: {
         color: 'red',
-        marginBottom: 15,
-        top: 90,
+        fontWeight: 500,
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    imageContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     image: {
-        width: 350,
-        height: 350,
-        bottom: -120,
+        width: 300,
+        height: 300,
+        resizeMode: "contain",
     },
 });
 
